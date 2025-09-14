@@ -106,6 +106,17 @@ void FixedCycle<T_Config, CycleDispatcher>::cycle( AMG_Class *amg, AMG_Level<T_C
             }
 
             level->unsetInitCycle();
+            /* OUR MOD */
+            // Record the solved vector to debug convergence.
+            {
+                static int called_count = 0;
+                char filename[100];
+                snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/x_lvl_%d_c_%d.txt", levelnum, called_count);
+                writeVector(filename, x);
+                std::cout << "Print x called from FixedCycle at level " << levelnum << " count " << called_count << std::endl;
+                ++called_count;
+            }
+            /* OUR MOD END */
         }
         level->Profile.toc("Smoother");
 
@@ -148,6 +159,21 @@ void FixedCycle<T_Config, CycleDispatcher>::cycle( AMG_Class *amg, AMG_Level<T_C
             level->Profile.tic("restrictRes");
             level->restrictResidual(r, bc);
             level->Profile.toc("restrictRes");
+            /* OUR MOD */
+
+            // Save the r, bc for debugging
+            {
+                static int called_count = 0;
+                char filename1[100];
+                char filename2[100];
+                snprintf(filename1, sizeof(filename1), "/home/combo/env/amgx/output_mat/r_lvl_%d_c_%d.txt", levelnum, called_count);
+                snprintf(filename2, sizeof(filename2), "/home/combo/env/amgx/output_mat/bc_lvl_%d_c_%d.txt", levelnum, called_count);
+                writeVector(filename1, r);
+                writeVector(filename2, bc);
+                std::cout << "Print r and bc called from FixedCycle at level " << levelnum << " count " << called_count << std::endl;
+                ++called_count;
+            }
+            /* OUR MOD END */
 
             // we have to be very carreful with !A.is_matrix_singleGPU() by A.is_matrix_distributed().
             // In classical consolidation we want to use A.is_matrix_distributed() in order to consolidateVector / unconsolidateVector
@@ -188,6 +214,20 @@ void FixedCycle<T_Config, CycleDispatcher>::cycle( AMG_Class *amg, AMG_Level<T_C
             //prolongate correction
             level->prolongateAndApplyCorrection(xc, bc, x, r);
             level->Profile.toc("proCorr");
+            /* OUR MOD */
+            // Record the corrected vector to debug convergence.
+            {
+                static int called_count = 0;
+                char filename1[100];
+                char filename2[100];
+                snprintf(filename1, sizeof(filename1), "/home/combo/env/amgx/output_mat/x_after_correction_lvl_%d_c_%d.txt", levelnum, called_count);
+                snprintf(filename2, sizeof(filename2), "/home/combo/env/amgx/output_mat/xc_lvl_%d_c_%d.txt", levelnum, called_count);
+                writeVector(filename1, x);
+                writeVector(filename2, xc);
+                std::cout << "Print x and xc after correction called from FixedCycle at level " << levelnum << " count " << called_count << std::endl;
+                ++called_count;
+            }
+            /* OUR MOD END */
             //post smooth
             *smoothing_direction = 1;
             level->Profile.tic("Smoother");
@@ -241,6 +281,17 @@ void FixedCycle<T_Config, CycleDispatcher>::cycle( AMG_Class *amg, AMG_Level<T_C
                 }
             }
 
+            /* OUR MOD */
+            // Record the post-smoothed vector to debug convergence.
+            {
+                static int called_count = 0;
+                char filename[100];
+                snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/x_after_postsmooth_lvl_%d_c_%d.txt", levelnum, called_count);
+                writeVector(filename, x);
+                std::cout << "Print x after postsmooth called from FixedCycle at level " << levelnum << " count " << called_count << std::endl;
+                ++called_count;
+            }
+            /* OUR MOD END */
         }
     } //
 

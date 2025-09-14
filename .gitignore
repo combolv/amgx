@@ -10,3 +10,4 @@ ci/docker/
 install
 Release
 result.log
+.vscode/

@@ -633,6 +633,9 @@ void CSR_Multiply_Impl<TemplateConfig<AMGX_device, V, M, I> >::galerkin_product(
         else if(true && this->m_use_cusparse_kernels)
         {
             this->cusparse_multiply(A, P, AP, NULL, NULL, NULL, NULL);
+            /* OUR MOD */
+            std::cout << "CUSPARSE SPMM used for AP in line " << __LINE__ << std::endl;
+            /* OUR MOD END */
         }
         else
         {
@@ -655,6 +658,9 @@ void CSR_Multiply_Impl<TemplateConfig<AMGX_device, V, M, I> >::galerkin_product(
         else if(true && this->m_use_cusparse_kernels)
         {
             this->cusparse_multiply(R, AP, RAP, NULL, NULL, NULL, NULL);
+            /* OUR MOD */
+            std::cout << "CUSPARSE SPMM used for A line " << __LINE__ << std::endl;
+            /* OUR MOD END */
         }
         else
         {

@@ -323,6 +323,11 @@ void Solver<TConfig>::setup( Operator<TConfig> &A, bool reuse_matrix_structure)
     AMGX_CPU_PROFILER("Solver::setup ");
 
     if (m_verbose)
+    /* OUR MOD */
+    { /* empty block to keep the original verbose signal */ }
+    // Use verbose in setup to debug the setup phase.
+    if (true)
+    /* OUR MOD END */
     {
         std::cout
                 << "----------------------------------------------------------------------------------"

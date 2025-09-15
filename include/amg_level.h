@@ -234,10 +234,17 @@ class AMG_GenerateNextCycles<TConfig, MemSpace, MemSpace, CycleDispatcher>
             if ( level->isCoarsest( ) && coarseSolver )
             {
                 level->launchCoarseSolver( amg, b, x );
+                #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+                std::cout << "Coarse coarse solver called and indeed launched." << std::endl;
+                #endif /* OUR MOD LOG END */
             }
             else
             {
                 dispatcher.dispatch( amg, level, b, x );
+                #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+                if (level->isCoarsest( ))
+                    std::cout << "Cycle dispatcher called instead." << std::endl;
+                #endif /* OUR MOD LOG END */
             }
         }
 };

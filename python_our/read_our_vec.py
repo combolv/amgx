@@ -2,19 +2,22 @@ import scipy as sp
 import numpy as np
 import torch
 
-def read_our_vec(filename):
+def read_vec(filename):
     with open(filename, 'r') as f:
         lines = f.readlines()
     # First line is size
     N = int(lines[0].strip())
+    len_lines = len(lines)
     data = []
-    for line in lines[1:]:
-        data.append(float(line.strip()))
+    for i in range(N):
+        if i + 1 >= len_lines:
+            raise ValueError(f"File {filename} has fewer lines than expected size {N}")
+        data.append(float(lines[i + 1].strip()))
     vec = np.array(data)
     assert len(vec) == N
     return np.array(vec, dtype=np.float64)
 
-def read_our_mat(filename):
+def read_mat(filename):
     # Raise error if it is not a .mtx file
     if not filename.endswith('.mtx'):
         raise ValueError("Only .mtx files are supported")

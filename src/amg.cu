@@ -1243,10 +1243,10 @@ void AMG<t_vecPrec, t_matPrec, t_indPrec>::getGridStatisticsString(std::stringst
 
     while (level_d != NULL)
     {
-        /* OUR MOD */
+        #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
         // For debugging: print all levels' matrices to file.
-        level_d->getA( ).printToFile("/home/combo/env/amgx/output_mat/m", "", -1, -1);
-        /* OUR MOD END */
+        // level_d->getA( ).printToFile("/home/combo/env/amgx/output_mat/m", "", -1, -1);
+        #endif /* OUR MOD LOG END */
         int has_diag = level_d->getA( ).hasProps(DIAG) ? 1 : 0;
         int64_t num_rows = (int)(level_d->getA( ).get_num_rows() * level_d->getA( ).get_block_dimy());
         int64_t nnz = (int)((level_d->getA( ).get_num_nz()

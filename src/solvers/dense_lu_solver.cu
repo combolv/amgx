@@ -572,6 +572,9 @@ void DenseLUSolver<TemplateConfig<AMGX_device, V, M, I> >::cudense_getrf()
 template< AMGX_VecPrecision V, AMGX_MatPrecision M, AMGX_IndPrecision I >
 void DenseLUSolver<TemplateConfig<AMGX_device, V, M, I> >::cudense_getrs( Vector_d &x )
 {
+    #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    std::cout << "In DenseLUSolver::cudense_getrs()!!!!" << std::endl;
+    #endif /* OUR MOD LOG END */
     //Solve L*X = RHS
     cusolverStatus_t status = cusolverDnXgetrs(m_cuds_handle,
                               CUBLAS_OP_N,
@@ -883,6 +886,9 @@ solver_setup(bool reuse_matrix_structure)
         // Allocate memory to store the dense A and initialize to zero.
         allocMem(m_dense_A, m_num_cols * m_lda, true);
         csr_to_dense(); // copy sparse A to dense_A
+        #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+        std::cout << "I'm after csr_to_dense() and before cudense_getrf()" << std::endl;
+        #endif /* OUR MOD LOG END */
     }
 
     cudense_getrf(); // do LU factor

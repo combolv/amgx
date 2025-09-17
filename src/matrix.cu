@@ -338,9 +338,16 @@ void
 Matrix< TemplateConfig<AMGX_device, t_vecPrec, t_matPrec, t_indPrec> >::printToFile(char *f, char *s, int srows, int erows)
 {
     int rank = 0;
+    //#ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    if constexpr (0) {
+    //#endif /* OUR MOD LOG END */
 #ifdef AMGX_WITH_MPI
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #endif
+    //#ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    }
+    //#endif /* OUR MOD LOG END */
+
     //notice that print will be called with different (target) rank on different on different ranks/processes
     this->print(f, s, srows, erows, rank);
 }

@@ -59,9 +59,6 @@ def test_RAP_all():
         else:
             print(f"RAP test passed for level {i}")
 
-load_mat_all()
-# test_RAP_all()
-
 def load_cg_iter_vector(key, prefix, suffix, start_index, num_level):
     for lvl_id in range(num_level):
         for id_count in range(start_index, 100):
@@ -217,9 +214,6 @@ def test_iterative_methods_level_all():
             print(f"Jacobi postsmoothing test passed at level {lvl}")
         x = x_new
 
-load_vec_all(start_index=0, num_level=len(ms["A"]))
-# test_iterative_methods_level_all()
-
 def test_torch_V():
     omega, get_diag, get_offdiag_from_A_and_diag = utils()
     num_level = 4
@@ -277,4 +271,9 @@ def test_torch_V():
     print(x[:32] - final_xap_ref[:32])
     input("?")
 
-test_torch_V()
+load_mat_all()
+# test_RAP_all()
+load_vec_all(start_index=0, num_level=len(ms["A"]))
+if __name__ == "__main__":
+    # test_iterative_methods_level_all()
+    test_torch_V()

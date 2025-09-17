@@ -137,9 +137,9 @@ void AMG_Level<T_Config>::launchCoarseSolver( AMG_Class *amg, VVector &b, VVecto
     #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
     std::cout << "Launching coarse solver..." << std::endl;
     // Check the type infomation of coarseSolver.
-    std::cout << "Type info of coarseSolver: " << typeid(*coarseSolver).name() << std::endl;
+    // std::cout << "Type info of coarseSolver: " << typeid(*coarseSolver).name() << std::endl;
     // Do we have more type information stored in TConfig?
-    std::cout << "Type info of TConfig: " << typeid(TConfig).name() << std::endl;
+    // std::cout << "Type info of TConfig: " << typeid(TConfig).name() << std::endl;
     #endif /* OUR MOD LOG END */
     if (this->isInitCycle())
     {

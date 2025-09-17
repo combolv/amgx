@@ -438,7 +438,7 @@ void Classical_AMG_Level_Base<T_Config>::computeProlongationOperator()
     int level_id = A.amg_level_index;
     char filename[100];
     snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/p%d", level_id);
-    // P.printToFile(filename, "", -1, -1);
+    P.printToFile(filename, "", -1, -1);
     std::cout << "Print P called from computeProlongationOperator" << std::endl;
     #endif /* OUR MOD LOG END */
 }
@@ -480,7 +480,7 @@ void Classical_AMG_Level_Base<T_Config>::computeRestrictionOperator()
     int level_id = this->getA().amg_level_index;
     char filename[100];
     snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/r%d", level_id);
-    // R.printToFile(filename, "", -1, -1);
+    R.printToFile(filename, "", -1, -1);
     std::cout << "Print R called from computeRestrictionOperator" << std::endl;
     #endif /* OUR MOD LOG END */
 }
@@ -607,7 +607,7 @@ void Classical_AMG_Level<TemplateConfig<AMGX_device, t_vecPrec, t_matPrec, t_ind
     int level_id = RAP.amg_level_index;
     char filename[100];
     snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/rap%d", level_id);
-    // RAP.printToFile(filename, "", -1, -1);
+    RAP.printToFile(filename, "", -1, -1);
     std::cout << "Print RAP called from computeAOperator_1x1" << std::endl;
     #endif /* OUR MOD LOG END */
 }

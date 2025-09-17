@@ -31,6 +31,20 @@
 #include <thrust/unique.h>
 #include <thrust/binary_search.h>
 #include <thrust/iterator/constant_iterator.h>
+
+namespace gat_fast {
+    void gat_forward(
+    const __nv_bfloat16* H,       // [N,Hin]
+    const __nv_bfloat16* W,       // [Hin,F,Hh]
+    const int* rowptr,            // [N+1]
+    const int* colind,            // [E]
+    const float* a,               // [Hh, 2F]
+    float* V,                     // [Hh, N, F]  (scratch)
+    float* out,                   // [Hh, N, F]
+    int N, int Hin, int F, int Hh,
+    float negative_slope);
+}
+
 namespace amgx
 {
 
@@ -1245,7 +1259,7 @@ void AMG<t_vecPrec, t_matPrec, t_indPrec>::getGridStatisticsString(std::stringst
     {
         #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
         // For debugging: print all levels' matrices to file.
-        // level_d->getA( ).printToFile("/home/combo/env/amgx/output_mat/m", "", -1, -1);
+        level_d->getA( ).printToFile("/home/combo/env/amgx/output_mat/m", "", -1, -1);
         #endif /* OUR MOD LOG END */
         int has_diag = level_d->getA( ).hasProps(DIAG) ? 1 : 0;
         int64_t num_rows = (int)(level_d->getA( ).get_num_rows() * level_d->getA( ).get_block_dimy());

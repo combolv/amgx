@@ -98,6 +98,44 @@ class GATLayerCSR(nn.Module):
         return out
 
 
+def check_speed():
+    from read_our_vec import read_mat
+    H_in = 4
+    H_out = 4
+    n_head = 4
+    with torch.no_grad():
+        torch.manual_seed(0)
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        scipy_mat = read_mat("/home/combo/env/amgx/test/tet_surf_cotan_0000.mtx")
+        scipy_mat = scipy_mat.tocsr()
+        # Get the graph in CSR format
+        rowptr = torch.from_numpy(scipy_mat.indptr).to(device)
+        colind = torch.from_numpy(scipy_mat.indices).to(device)
+        N = rowptr.numel() - 1
+        E = colind.numel()
+        print(f"Num of nodes: {N}, edges: {E}")
+
+        H = torch.randn(N, H_in, device=device, dtype=torch.bfloat16)
+
+        gat = GATLayerCSR(H_in, H_out, n_head, negative_slope=0.1, attn_dropout=0.0, concat=False).to(device)
+
+        torch.compile(gat)
+        # Warm-up
+        
+        for _ in range(10):
+            out = gat(H, rowptr, colind)
+        # Timing
+        import time
+        torch.cuda.synchronize()
+        start = time.time()
+        for _ in range(100):
+            out = gat(H, rowptr, colind)
+        torch.cuda.synchronize()
+        end = time.time()
+        print(f"Avg time per forward: {(end - start) / 100:.6f} seconds")
+
+
 # ---------------------------- Minimal sanity check ----------------------------
 if __name__ == "__main__":
     torch.manual_seed(0)
@@ -115,3 +153,5 @@ if __name__ == "__main__":
 
     print("out:", out.shape)     # [N, n_head, H_out]
     print("alpha:", alpha.shape) # [E, n_head]
+    check_speed()
+

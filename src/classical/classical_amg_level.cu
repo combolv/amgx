@@ -432,7 +432,7 @@ void Classical_AMG_Level_Base<T_Config>::computeProlongationOperator()
         P.setInteriorView(OWNED);
         P.setExteriorView(OWNED);
     }
-    // #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
     {
         // Debug: see if we can print P to file.
         // Get the level id from A.
@@ -442,7 +442,7 @@ void Classical_AMG_Level_Base<T_Config>::computeProlongationOperator()
         P.printToFile(filename, "", -1, -1);
         std::cout << "Print P called from computeProlongationOperator" << std::endl;
     }
-    // #endif /* OUR MOD LOG END */
+    #endif /* OUR MOD LOG END */
 }
 
 /**********************************************
@@ -476,7 +476,7 @@ void Classical_AMG_Level_Base<T_Config>::computeRestrictionOperator()
 
     R.set_initialized(1);
     this->Profile.toc("computeR");
-    // #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
     {
         // Debug: see if we can print R to file.
         // Get the level id from A.
@@ -486,7 +486,7 @@ void Classical_AMG_Level_Base<T_Config>::computeRestrictionOperator()
         R.printToFile(filename, "", -1, -1);
         std::cout << "Print R called from computeRestrictionOperator" << std::endl;
     }
-    // #endif /* OUR MOD LOG END */
+    #endif /* OUR MOD LOG END */
 }
 
 /**********************************************

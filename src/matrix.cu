@@ -240,9 +240,15 @@ Matrix< TemplateConfig<AMGX_device, t_vecPrec, t_matPrec, t_indPrec> >::print(ch
     int printRowsStart, printRowsEnd;
     int i, j, ii, xdim, ydim, tnnz;
     ValueType a;
+    //#ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    if constexpr (0) {
+    //#endif /* OUR MOD LOG END */
 #ifdef AMGX_WITH_MPI
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #endif
+    //#ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    }
+    //#endif /* OUR MOD LOG END */
 
     //check target rank
     if (rank == trank)

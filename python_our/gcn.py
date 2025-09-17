@@ -342,8 +342,8 @@ def u_speed():
         print(A.shape, len(A.values()))
 
 
-def test_forward(batch_size=32):
-    model = UMGPCG().to("cuda:0")
+def test_forward(batch_size=64, hidden_dim=4):
+    model = UMGPCG(finest_hidden_dim=hidden_dim).to("cuda:0")
     num_node = ms["A"][0].shape[0]
     # Test if #batch_size right-hand sides work.
     batched_b = torch.randn(num_node, batch_size, device="cuda:0")
@@ -357,4 +357,10 @@ def test_forward(batch_size=32):
 
 
 if __name__ == "__main__":
-    test_forward(1)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-b', '--batch-size', type=int, default=64, help='Batch size for testing')
+    parser.add_argument('-d', '--hidden-dim', type=int, default=4, help='Hidden dimension for GCN')
+    args = parser.parse_args()
+
+    test_forward(args.batch_size, args.hidden_dim)

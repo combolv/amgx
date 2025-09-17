@@ -432,15 +432,17 @@ void Classical_AMG_Level_Base<T_Config>::computeProlongationOperator()
         P.setInteriorView(OWNED);
         P.setExteriorView(OWNED);
     }
-    #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
-    // Debug: see if we can print P to file.
-    // Get the level id from A.
-    int level_id = A.amg_level_index;
-    char filename[100];
-    snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/p%d", level_id);
-    P.printToFile(filename, "", -1, -1);
-    std::cout << "Print P called from computeProlongationOperator" << std::endl;
-    #endif /* OUR MOD LOG END */
+    // #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    {
+        // Debug: see if we can print P to file.
+        // Get the level id from A.
+        int level_id = A.amg_level_index;
+        char filename[100];
+        snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/p%d", level_id);
+        P.printToFile(filename, "", -1, -1);
+        std::cout << "Print P called from computeProlongationOperator" << std::endl;
+    }
+    // #endif /* OUR MOD LOG END */
 }
 
 /**********************************************
@@ -601,15 +603,17 @@ void Classical_AMG_Level<TemplateConfig<AMGX_device, t_vecPrec, t_matPrec, t_ind
     RAP.set_initialized( 1 );
     int spmm_no_sort = this->amg->m_cfg->AMG_Config::template getParameter<int>("spmm_no_sort", this->amg->m_cfg_scope);
     this->Profile.toc("computeA");
-    #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
-    // Debug: see if we can print RAP to file.
-    // Get the level id from A.
-    int level_id = RAP.amg_level_index;
-    char filename[100];
-    snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/rap%d", level_id);
-    RAP.printToFile(filename, "", -1, -1);
-    std::cout << "Print RAP called from computeAOperator_1x1" << std::endl;
-    #endif /* OUR MOD LOG END */
+    // #ifdef USE_OUR_MOD_LOG /* OUR MOD LOG */
+    {
+        // Debug: see if we can print RAP to file.
+        // Get the level id from A.
+        int level_id = RAP.amg_level_index;
+        char filename[100];
+        snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/rap%d", level_id);
+        RAP.printToFile(filename, "", -1, -1);
+        std::cout << "Print RAP called from computeAOperator_1x1" << std::endl;
+    }
+    // #endif /* OUR MOD LOG END */
 }
 /**********************************************
  * computes the restriction: rr=R*r

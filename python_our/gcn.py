@@ -352,7 +352,7 @@ def test_forward(batch_size=32):
             ms[name][i] = convert_scipy_coo_to_torch_sparse(mat).to("cuda:0").coalesce()
     loss = model(ms, batched_b)
     loss.backward()
-    print("Memory used: ", torch.cuda.memory_allocated())
+    print("Memory used: ", torch.cuda.max_memory_reserved())
     input("Please check the GPU memory usage, then press Enter to continue...")
 
 

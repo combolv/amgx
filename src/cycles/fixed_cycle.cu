@@ -114,7 +114,7 @@ void FixedCycle<T_Config, CycleDispatcher>::cycle( AMG_Class *amg, AMG_Level<T_C
             {
                 static int called_count = 0;
                 char filename[100];
-                snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/x_lvl_%d_c_%d.txt", levelnum, called_count);
+                snprintf(filename, sizeof(filename), "../output_mat/x_lvl_%d_c_%d.txt", levelnum, called_count);
                 writeVector(filename, x);
                 std::cout << "Print x called from FixedCycle at level " << levelnum << " count " << called_count << std::endl;
                 ++called_count;
@@ -175,8 +175,8 @@ void FixedCycle<T_Config, CycleDispatcher>::cycle( AMG_Class *amg, AMG_Level<T_C
                 static int called_count = 0;
                 char filename1[100];
                 char filename2[100];
-                snprintf(filename1, sizeof(filename1), "/home/combo/env/amgx/output_mat/r_lvl_%d_c_%d.txt", levelnum, called_count);
-                snprintf(filename2, sizeof(filename2), "/home/combo/env/amgx/output_mat/bc_lvl_%d_c_%d.txt", levelnum, called_count);
+                snprintf(filename1, sizeof(filename1), "../output_mat/r_lvl_%d_c_%d.txt", levelnum, called_count);
+                snprintf(filename2, sizeof(filename2), "../output_mat/bc_lvl_%d_c_%d.txt", levelnum, called_count);
                 writeVector(filename1, r);
                 writeVector(filename2, bc);
                 std::cout << "Print r and bc called from FixedCycle at level " << levelnum << " count " << called_count << std::endl;
@@ -229,8 +229,8 @@ void FixedCycle<T_Config, CycleDispatcher>::cycle( AMG_Class *amg, AMG_Level<T_C
                 static int called_count = 0;
                 char filename1[100];
                 char filename2[100];
-                snprintf(filename1, sizeof(filename1), "/home/combo/env/amgx/output_mat/x_after_correction_lvl_%d_c_%d.txt", levelnum, called_count);
-                snprintf(filename2, sizeof(filename2), "/home/combo/env/amgx/output_mat/xc_lvl_%d_c_%d.txt", levelnum, called_count);
+                snprintf(filename1, sizeof(filename1), "../output_mat/x_after_correction_lvl_%d_c_%d.txt", levelnum, called_count);
+                snprintf(filename2, sizeof(filename2), "../output_mat/xc_lvl_%d_c_%d.txt", levelnum, called_count);
                 writeVector(filename1, x);
                 writeVector(filename2, xc);
                 std::cout << "Print x and xc after correction called from FixedCycle at level " << levelnum << " count " << called_count << std::endl;
@@ -295,7 +295,7 @@ void FixedCycle<T_Config, CycleDispatcher>::cycle( AMG_Class *amg, AMG_Level<T_C
             {
                 static int called_count = 0;
                 char filename[100];
-                snprintf(filename, sizeof(filename), "/home/combo/env/amgx/output_mat/x_after_postsmooth_lvl_%d_c_%d.txt", levelnum, called_count);
+                snprintf(filename, sizeof(filename), "../output_mat/x_after_postsmooth_lvl_%d_c_%d.txt", levelnum, called_count);
                 writeVector(filename, x);
                 std::cout << "Print x after postsmooth called from FixedCycle at level " << levelnum << " count " << called_count << std::endl;
                 ++called_count;

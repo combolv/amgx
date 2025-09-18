@@ -8,7 +8,22 @@ from test_torch_aligned import *
 # The reason is that, when batching in multigrid, we often run **1** A with multiple b's.
 # The following operations are all designed for single A, multiple b's.
 
-# Also we assume A is always a sparse COO matrix. (CSR format is not well supported in PyTorch sparse operations.)
+class SpMM(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, A, x):
+        A = A.coalesce()
+        ctx.save_for_backward(A, x)
+        y = torch.sparse.mm(A, x)
+        return y
+
+    @staticmethod
+    def backward(ctx, gy):
+        A, x = ctx.saved_tensors
+        ind = A.indices()
+        gA = torch.sparse_coo_tensor(ind, (gy[ind[0]] * x[ind[1]]).sum(1), A.size()).coalesce()
+        gx = torch.sparse.mm(A.t(), gy)
+        return gA, gx
+
 
 class GCNLayer(nn.Module):
     def __init__(self, in_features, out_features):
@@ -23,7 +38,7 @@ class GCNLayer(nn.Module):
     
     def forward(self, A, x):
         # H = sigma(A X W)
-        return F.leaky_relu(self.linear((A @ x)))
+        return F.leaky_relu(self.linear(SpMM.apply(A, x)))
 
 
 class GCNLevel(nn.Module):
@@ -135,7 +150,7 @@ class UGCN(nn.Module):
         feat = []
         for l in range(num_levels):
             A = A_list[l]
-            x = self.encode(A, l, self.lvl(R_list, l - 1) @ feat[-1] if l > 0 else None)
+            x = self.encode(A, l, SpMM.apply(self.lvl(R_list, l - 1), feat[-1]) if l > 0 else None)
             feat.append(self.lvl(self.levels, l).pre(A, x))
         ret = []
         # Now feat[l] is the output feature at level l after pre-GCN.
@@ -145,7 +160,7 @@ class UGCN(nn.Module):
                 x = self.lvl(self.levels, l)(A, feat[l])
             else:
                 print(feat[l].shape, P_list[l].shape, x.shape)
-                x = torch.cat([feat[l], self.lvl(P_list, l) @ x], dim=-1)
+                x = torch.cat([feat[l], SpMM.apply(self.lvl(P_list, l), x)], dim=-1)
                 print("At level", l, "x shape:", x.shape)
                 x = self.lvl(self.levels, l).post(A, x)
             A_updated = self.lvl(self.decoder, l)(A, x)
@@ -204,11 +219,11 @@ class VCycle(nn.Module):
             # In presmoothing, we simply have: x -> omega * b / diag(A)
             x = self.get_omega(lvl) * b / D.unsqueeze(1)
             # 2. Compute residual r = b - Ax -> r after presmoothing.
-            r = b - torch.sparse.mm(A, x)
+            r = b - SpMM.apply(A, x)
             xs.append(x)
             # 3. Restrict residual to coarse level: rc = R * r
             R = ms_dict["R"][lvl].coalesce()
-            rc = torch.sparse.mm(R, r)
+            rc = SpMM.apply(R, r)
             bs.append(rc)
         # On the coarsest level, we simply solve Ax = b directly.
         Ac = ms_dict["A"][-1].coalesce()
@@ -225,11 +240,11 @@ class VCycle(nn.Module):
             D, U = self.DU(A)
             # Prolongate and correct: x = x + P * xc
             P = ms_dict["P"][lvl].coalesce()
-            x = xs[lvl] + torch.sparse.mm(P, x)
+            x = xs[lvl] + SpMM.apply(P, x)
             # Read b from bc of previous level.
             b = bs[lvl]
             # Postsmoothing: x -> omega * (b - off_diag_A * x) / diag_A + (1 - omega) * x
-            x_new = self.get_omega(lvl) * (b - torch.sparse.mm(U, x)) / D.unsqueeze(1) + (1 - self.get_omega(lvl)) * x
+            x_new = self.get_omega(lvl) * (b - SpMM.apply(U, x)) / D.unsqueeze(1) + (1 - self.get_omega(lvl)) * x
             x = x_new
         return x
 
@@ -239,7 +254,7 @@ class ResL2Loss(nn.Module):
         super().__init__()
     
     def forward(self, A, x, b):
-        r = b - torch.sparse.mm(A, x)
+        r = b - SpMM.apply(A, x)
         return (r ** 2).mean()
 
 

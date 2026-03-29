@@ -1,11 +1,12 @@
 import random
+from copy import deepcopy
 def generate_selector(input_config_dict, input_size_int):
     '''
     input_size_int: -3, -2, -1, 0, 2, 4, 8
     When <= 0, use the classical AMG with aggressive coarsening = -input_size_int
     When > 0, use the aggregation AMG with size of aggregates = input_size_int
     '''
-    config_dict = input_config_dict.copy()
+    config_dict = deepcopy(input_config_dict)
     if "selector" in config_dict["solver"]["preconditioner"]:
         config_dict["solver"]["preconditioner"].pop("selector")
     if input_size_int <= 0:
@@ -37,7 +38,7 @@ def generate_smoother_partial(input_config_dict, smoother_type_id, input_factor)
     For Jacobi and Chebyshev: relaxation factor, suggested search [0.33, 0.5, 0.66, 0.72, 0.8, 0.91, 1.0]
     For multi-color GS and DILU: max uncolored percentage, suggested search [0.05, 0.1, 0.15, 0.2]
     '''
-    config_dict = input_config_dict.copy()
+    config_dict = deepcopy(input_config_dict)
     if "preconditioner" in config_dict["solver"]["preconditioner"]["smoother"]:
         config_dict["solver"]["preconditioner"]["smoother"].pop("preconditioner")
     if smoother_type_id in [0, 1]:
@@ -74,7 +75,7 @@ def generate_coarsest(input_config_dict, coarsest_max_iter):
     0: Use a direct solver on the coarsest level
     >0: Set the coarsest solver sweeps to the input value and use the NOSOLVER (iterative) on the coarsest level
     '''
-    config_dict = input_config_dict.copy()
+    config_dict = deepcopy(input_config_dict)
     if coarsest_max_iter == 0:
         config_dict["solver"]["preconditioner"]["coarse_solver"] = "DENSE_LU_SOLVER"
     else:
@@ -83,7 +84,7 @@ def generate_coarsest(input_config_dict, coarsest_max_iter):
     return config_dict
 
 def generate_amg_partial(input_config_dict, sweep_iter, min_coarse_rows, cycle_type_id, interp_max_elements, strength_threshold):
-    config_dict = input_config_dict.copy()
+    config_dict = deepcopy(input_config_dict)
     config_dict["solver"]["preconditioner"]["presweeps"] = sweep_iter
     config_dict["solver"]["preconditioner"]["postsweeps"] = sweep_iter
     config_dict["solver"]["preconditioner"]["min_coarse_rows"] = min_coarse_rows
@@ -124,7 +125,7 @@ def generate_smoother(input_config_dict, smoother_hyperclass, smoother_type_sub_
     raise NotImplementedError("Full generator for smoothers not implemented yet")
 
 def generate_all(input_config_dict, input_int_para, input_float_para):
-    config_dict = input_config_dict.copy()
+    config_dict = deepcopy(input_config_dict)
     selector_int = [-3, -2, -1, 0, 2, 4, 8][input_int_para[0]]
     smoother_int = [-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4][input_int_para[1]]
     coarsest_int = [0, 2, 4, 8, 16][input_int_para[2]]
@@ -162,8 +163,8 @@ if __name__ == "__main__":
     import scipy.sparse as sp
     import numpy as np
     from pyamgx_sol import wrapped_solver
-    A_sp = sp.load_npz("/home/combo/env/ncg/generated/poisson_tetmesh/mat/000000.npz")
-    b = np.load("/home/combo/env/ncg/generated/poisson_tetmesh/rhs/000000.npy")
+    A_sp = sp.load_npz("/home/combo/env/ncg/generated/poisson_tetmesh/mat/000001.npz")
+    b = np.load("/home/combo/env/ncg/generated/poisson_tetmesh/rhs/000001.npy")
     res = wrapped_solver(A_sp, b, new_config, return_residuals=True, timeout=5)
     print(res)
 

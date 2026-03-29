@@ -119,7 +119,12 @@ def robust_wrapped_solver(A_sp, b, config_dict, warmup_iter=1, repeat=5, refine=
         if res[-2] != 0:
             if verbose:
                 print(f"Iteration {i} failed with error code {res[-2]}: {res[-1]}")
-            return res
+            ret_dict["num_iters"] = res[0]
+            ret_dict["final_residual_norm"] = res[1]
+            ret_dict["final_rel_residual_norm"] = res[2]
+            ret_dict["err_code"] = res[5]
+            ret_dict["err_msg"] = res[6]
+            return ret_dict
         logs = res[4]
         try:
             setup_time, all_time = parse_solving_time(logs)

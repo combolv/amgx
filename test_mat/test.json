@@ -1,0 +1,36 @@
+{
+    "config_version": 2,
+    "solver": {
+        "preconditioner": {
+            "solver": "AMG",
+            "scope": "amg_solver",
+            "algorithm": "CLASSICAL",
+            "aggressive_levels": 0,
+            "interpolator": "D2",
+            "interp_max_elements": 6,
+            "smoother": {
+                "relaxation_factor": 1,
+                "scope": "smoother",
+                "solver": "JACOBI_L1"
+            },
+            "presweeps": 2,
+            "coarsest_sweeps": 4,
+            "coarse_solver": "NOSOLVER",
+            "max_iters": 1,
+            "max_row_sum": 0.9,
+            "strength_threshold": 0.25,
+            "min_coarse_rows": 2,
+            "cycle": "V",
+            "postsweeps": 2
+        },
+        "solver": "PCG",
+        "store_res_history": 1,
+        "print_solve_stats": 1,
+        "monitor_residual": 1,
+        "obtain_timings": 1,
+        "max_iters": 1000,
+        "convergence": "RELATIVE_INI_CORE",
+        "tolerance": 1e-06,
+        "norm": "L2"
+     }
+}

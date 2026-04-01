@@ -166,8 +166,8 @@ def robust_wrapped_solver(A_sp, b, config_dict, warmup_iter=1, repeat=5, refine=
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mat", type=str, default="/home/combo/env/ncg/generated/poisson_tetmesh/mat/000000.npz")
-    parser.add_argument("--rhs", type=str, default="/home/combo/env/ncg/generated/poisson_tetmesh/rhs/000000.npy")
+    parser.add_argument("--mat", type=str, default="/home/combo/env/ncg/generated/poisson_tetmesh/mat/000001.npz")
+    parser.add_argument("--rhs", type=str, default="/home/combo/env/ncg/generated/poisson_tetmesh/rhs/000001.npy")
     parser.add_argument("--config", type=str, default="/home/combo/env/amgx/test_mat/test.json")
     args = parser.parse_args()
     A_sp = sp.load_npz(args.mat)

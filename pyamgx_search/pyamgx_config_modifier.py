@@ -148,6 +148,12 @@ def generate_random_test(input_config):
     input_float_para = [random.uniform(0.1, 1.0) for _ in range(2)]
     return generate_all(input_config, input_int_para, input_float_para)
 
+
+def get_input_para_ranges():
+    input_int_para_max_ranges = [7, 13, 5, 6, 4, 3, 4]
+    input_float_para_ranges = [(0.0, 1.0), (0.0, 1.0)]
+    return input_int_para_max_ranges, input_float_para_ranges
+
 if __name__ == "__main__":
     from tqdm import tqdm
     import json

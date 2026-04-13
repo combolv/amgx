@@ -7,6 +7,9 @@ import argparse
 import json
 from pathlib import Path
 
+if __name__ != "__main__":
+    raise ImportError("This script is meant to be run as a standalone program, not imported as a module.")
+
 robust_best_value_global = [1.1]  # Use a list to allow modification inside callback
 
 parser = argparse.ArgumentParser()
